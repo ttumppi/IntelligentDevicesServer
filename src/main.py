@@ -1,12 +1,20 @@
 from firebaseAPI import FirebaseDB 
+from emailSender import EmailSender
 import os.path
 import sys
 import time
 import msvcrt
+import re
+import getpass
 
 firebaseDB = None
+emailSender = None
 
-def Start():
+emailReceiver = ""
+
+def CreateDatabaseConnection():
+
+    global firebaseDB
 
     filepath = ""
 
@@ -19,10 +27,12 @@ def Start():
 
         break
     
-    firebaseDB = FirebaseDB(filepath)
+    firebaseDB = FirebaseDB(filepath, True)
 
-def RunServer():
+def WaitForShutdown():
 
+
+    
     print ("Press s to shutdown")
     while (True):
 
@@ -34,8 +44,36 @@ def RunServer():
                  break
         time.sleep(0.1)
 
-Start()
 
-RunServer()
+
+
+def SetupEmailSender():
+    global emailSender
+    global emailReceiver
+
+    email = ""
+    password = ""
+
+    emailReceiver = input("Input email of receiver of notifications: ")
+
+    email = input("Input login email used as sender:  ")
+
+    password = getpass.getpass("Please input password for sender account:  ")
+
+    emailSender = EmailSender(email, password)
+
+def RegisterVisitorAddedEventListener():
+    firebaseDB.RegisterListenerForReceivedVisitors(VisitorAddedListener)
+
+def VisitorAddedListener(visitor):
+    emailSender.SendEmail(emailReceiver, f'You have a visit from {visitor}')
+
+CreateDatabaseConnection()
+
+SetupEmailSender()
+
+RegisterVisitorAddedEventListener()
+
+WaitForShutdown()
 
 print("Shutting down")
