@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="F:\Repos\IntelligentDevicesServer"
+VIRTUAL_ENV="F:\Repos\IntelligentDevicesServer\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
@@ -52,9 +52,9 @@ fi
 
 if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] ; then
     _OLD_VIRTUAL_PS1="${PS1:-}"
-    PS1="(IntelligentDevicesServer) ${PS1:-}"
+    PS1="(venv) ${PS1:-}"
     export PS1
-    VIRTUAL_ENV_PROMPT="(IntelligentDevicesServer) "
+    VIRTUAL_ENV_PROMPT="(venv) "
     export VIRTUAL_ENV_PROMPT
 fi
 
