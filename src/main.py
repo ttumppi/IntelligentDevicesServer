@@ -33,16 +33,9 @@ def WaitForShutdown():
 
 
     
-    print ("Press s to shutdown")
-    while (True):
-
-        
-
-        if msvcrt.kbhit():  # Check if a key is pressed
-            user_input = msvcrt.getch().decode("utf-8")  # Read the keypress
-            if user_input == "s":
-                 break
-        time.sleep(0.1)
+    while (input("Press S to shutdown") != "S"):
+        time.sleep(10)
+   
 
 
 
@@ -65,8 +58,8 @@ def SetupEmailSender():
 def RegisterVisitorAddedEventListener():
     firebaseDB.RegisterListenerForReceivedVisitors(VisitorAddedListener)
 
-def VisitorAddedListener(visitor):
-    emailSender.SendEmail(emailReceiver, f'You have a visit from {visitor}')
+def VisitorAddedListener(visitorMessage):
+    emailSender.SendEmail(emailReceiver, f'You have a visit. message:  {visitorMessage}')
 
 CreateDatabaseConnection()
 

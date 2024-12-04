@@ -22,12 +22,12 @@ class FirebaseDB:
 
 
 
-    def AddVisitor(self, visitor):
+    def AddVisitor(self, visitorMessage):
         
         self.referenceToDB.push({
-            "visitor": visitor
+            "visitor message": visitorMessage
         })
-        print(f'Added {visitor} to database')
+        print(f'Added {visitorMessage} to database')
 
     def VisitorReceivedListener(self, event):
         if event.event_type == "put" and event.data:
@@ -35,18 +35,18 @@ class FirebaseDB:
             if (event.path == "/"): # Event is not triggered during insert but on startup of connection
                 return
 
-            for key, visitor in event.data.items():
-                if (visitor):
+            for key, visitorMessage in event.data.items():
+                if (visitorMessage):
                     
                     db.reference(f'queue/{event.path}').delete()
-                    print("Visitor handled in server")
+                    print("Visitor message handled in server")
 
-                    self.InvokeVisitorReceivedListeners(visitor)
+                    self.InvokeVisitorReceivedListeners(visitorMessage)
 
     def RegisterListenerForReceivedVisitors(self, listener):
         if (listener not in self.visitorReceivedListeners):
             self.visitorReceivedListeners.append(listener)
 
-    def InvokeVisitorReceivedListeners(self, visitor):
+    def InvokeVisitorReceivedListeners(self, visitorMessage):
         for listener in self.visitorReceivedListeners:
-            listener(visitor)
+            listener(visitorMessage)
