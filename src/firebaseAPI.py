@@ -31,10 +31,14 @@ class FirebaseDB:
 
     def VisitorReceivedListener(self, event):
         if event.event_type == "put" and event.data:
+
+            if (event.path == "/"): # Event is not triggered during insert but on startup of connection
+                return
+
             for key, visitor in event.data.items():
                 if (visitor):
                     
-                    db.reference(f'queue/{key}').delete()
+                    db.reference(f'queue/{event.path}').delete()
                     print("Visitor handled in server")
 
                     self.InvokeVisitorReceivedListeners(visitor)
