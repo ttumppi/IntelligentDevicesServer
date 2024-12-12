@@ -25,11 +25,7 @@ class HttpClient:
         creds = self.EncryptCredentials()
         GETRequest = urllib.request.Request(f"http://{self.ip}:{self.port}/data", None, {"Content-Type": "application/json", "Authorization": creds}, None, None, "GET")
         
-        somejson = {"message":"Test from python"}
-
-        jsonDump = json.dumps(somejson).encode("utf-8")
-        POSTRequest = urllib.request.Request(f"http://{self.ip}:{self.port}/data", jsonDump, {"Content-Type": "application/json", "Authorization": creds}, None, None, "POST")
-        urllib.request.urlopen(POSTRequest)
+       
 
         while (self.shutdown == False):
             try:
@@ -50,6 +46,14 @@ class HttpClient:
             
             
             time.sleep(5)
+
+    def UploadMessage(self, message):
+        creds = self.EncryptCredentials()
+        someJson = {"message":"Test from python"}
+
+        jsonDump = json.dumps(someJson).encode("utf-8")
+        POSTRequest = urllib.request.Request(f"http://{self.ip}:{self.port}/data", jsonDump, {"Content-Type": "application/json", "Authorization": creds}, None, None, "POST")
+        urllib.request.urlopen(POSTRequest)
             
 
 

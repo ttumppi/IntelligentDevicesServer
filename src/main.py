@@ -49,12 +49,12 @@ def SetupEmailSender():
 
 
 def VisitorAddedListener(visitorMessage):
-    #emailSender.SendEmail(emailReceiver, f'You have a visit. message:  {visitorMessage}')
+    emailSender.SendEmail(emailReceiver, f'You have a visit. message:  {visitorMessage}')
     print(f"Sending message : {visitorMessage}")
 
 CreateDatabaseConnection()
 
-#SetupEmailSender()
+SetupEmailSender()
 
 
 
