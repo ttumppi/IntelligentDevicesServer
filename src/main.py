@@ -1,5 +1,6 @@
 from firebaseAPI import FirebaseDB 
 from emailSender import EmailSender
+from client import HttpClient
 import os.path
 import sys
 import time
@@ -7,27 +8,17 @@ import msvcrt
 import re
 import getpass
 
-firebaseDB = None
+client = None
 emailSender = None
 
 emailReceiver = ""
 
 def CreateDatabaseConnection():
 
-    global firebaseDB
+    global client
 
-    filepath = ""
-
-    while (True):
-        filepath = input("Please write the path to the sdk key JSON file:    ")
-    
-        if (os.path.isfile(filepath) == False):
-            print(f'File {filepath} could not be found, please try again')
-            continue
-
-        break
-    
-    firebaseDB = FirebaseDB(filepath, True)
+    client = HttpClient("localhost", "8080", VisitorAddedListener)
+    client.Start()
 
 def WaitForShutdown():
 
@@ -55,18 +46,19 @@ def SetupEmailSender():
 
     emailSender = EmailSender(email, password)
 
-def RegisterVisitorAddedEventListener():
-    firebaseDB.RegisterListenerForReceivedVisitors(VisitorAddedListener)
+
 
 def VisitorAddedListener(visitorMessage):
-    emailSender.SendEmail(emailReceiver, f'You have a visit. message:  {visitorMessage}')
+    #emailSender.SendEmail(emailReceiver, f'You have a visit. message:  {visitorMessage}')
+    print(f"Sending message : {visitorMessage}")
 
 CreateDatabaseConnection()
 
-SetupEmailSender()
+#SetupEmailSender()
 
-RegisterVisitorAddedEventListener()
+
 
 WaitForShutdown()
+client.Shutdown()
 
 print("Shutting down")
